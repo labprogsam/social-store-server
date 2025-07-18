@@ -3,10 +3,16 @@
 
 import express from "express";
 import productRoutes from "./productRoutes.js";
+import authRoutes from "./authRoutes.js"
+import {verifyToken} from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.use("/produtos", productRoutes);
+// Rotas privadas
+router.use("/api/produtos", verifyToken, productRoutes);
+
+// Rotas públicas
+router.use("/api/auth", authRoutes);
 
 // Rota padrão que retorna uma mensagem de boas-vindas
 // Esta rota é acessível na raiz da aplicação
