@@ -3,8 +3,8 @@
 
 import app from "./app.js";
 
-app.listen(3001, () => {
+app.listen(8000, () => {
   console.log(
-    "Servidor rodando na porta 3001, acesse em http://localhost:3001"
+    "Servidor rodando na porta 8000, acesse em http://localhost:8000"
   );
 });
