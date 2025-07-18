@@ -18,7 +18,7 @@ async function authenticateExternalService(email, password) {
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({})); // Evita erro se o corpo não for JSON
     const errorMessage = errorData.message || 'Credenciais inválidas ou erro no serviço de autenticação.';
-    // Lançamos um erro para ser capturado pelo bloco principal.
+    
     throw new Error(errorMessage);
   }
 
@@ -26,7 +26,7 @@ async function authenticateExternalService(email, password) {
 }
 
 async function saveOngData(ngoData) {
-  if (!ngoData) return; // Não faz nada se não houver dados da ONG
+  if (!ngoData) return;
   const processedData = processData(ngoData);
   await OngRepository.upsertOng(processedData);
 }
@@ -55,13 +55,13 @@ export const AuthController = {
     try {
       const { email, password } = req.body;
 
-      // 1. Autenticar no serviço externo
+      // Autenticar no serviço externo
       const externalData = await authenticateExternalService(email, password);
 
-      // 2. Salvar dados da ONG localmente (se houver)
+      // Salvar dados da ONG localmente (se houver)
       await saveOngData(externalData.ngo);
 
-      // 3. Criar a sessão (JWT + Cookie)
+      // Criar a sessão (JWT + Cookie)
       createSession(res, externalData);
 
       const clientResponse = {
@@ -93,7 +93,6 @@ export const AuthController = {
         path: '/',
       });
 
-      // Envia uma resposta de sucesso.
       return res.status(200).json({ message: 'Logout realizado com sucesso.' });
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
