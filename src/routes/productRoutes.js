@@ -9,8 +9,8 @@ import { ProductController } from "../controllers/productController.js";
 const router = express.Router();
 
 router.get("/", ProductController.list);
+router.post("/", ProductController.create);
 router.get("/:produtoId", ProductController.getById);
-router.post("/publicarProduto", ProductController.create);
 router.put("/:produtoId", ProductController.update);
 router.delete("/:produtoId", ProductController.delete);
 

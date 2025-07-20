@@ -2,11 +2,11 @@
 // O DTO (Data Transfer Object) é usado para transferir dados entre processos
 
 export function createProductDTO(body) {
-  const { title, description, price } = body;
+  const { title, description, price, ongId } = body;
 
-  if (!title || !description || !price) {
+  if (!title || !description || !price || !ongId) {
     throw new Error(
-      "Todos os campos são obrigatórios: nome do produto, descrição e preço."
+      "Todos os campos são obrigatórios: nome do produto, descrição. ongID e preço."
     );
   }
 
@@ -18,5 +18,6 @@ export function createProductDTO(body) {
     title: title.trim(),
     description: description.trim() || "",
     price: Number(price),
+    ongId:  Number(ongId),
   };
 }

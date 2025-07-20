@@ -19,6 +19,8 @@ model Product {
   title       String
   description String
   price       Float
+  ong  ONG @relation(fields: [ongId], references: [id_bd])
+  ongId Int
 }
 
 model ONG {
@@ -37,6 +39,7 @@ model ONG {
   skills                    String?
   causes                    String?
   sustainable_development_goals String?
+  products Product[]
 
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
