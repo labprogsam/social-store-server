@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/server.js",
-    "test": "jest"
+    "test": "jest",
+    "migrate": "prisma migrate deploy",
+    "migrate:dev": "prisma migrate dev --name init",
+    "migrate:reset": "prisma migrate reset --force"
   },
   "repository": {
     "type": "git",
