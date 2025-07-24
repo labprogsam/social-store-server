@@ -3,8 +3,9 @@
 
 import express from "express";
 import productRoutes from "./productRoutes.js";
-import authRoutes from "./authRoutes.js"
-import {verifyToken} from "../utils/verifyToken.js";
+import authRoutes from "./authRoutes.js";
+import ongRoutes from "./ongRoutes.js";
+import { verifyToken } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
@@ -13,6 +14,9 @@ router.use("/api/produtos", verifyToken, productRoutes);
 
 // Rotas públicas
 router.use("/api/auth", authRoutes);
+
+// Rotas de ONGs (mistas - algumas públicas, outras privadas)
+router.use("/api/ong", ongRoutes);
 
 // Rota padrão que retorna uma mensagem de boas-vindas
 // Esta rota é acessível na raiz da aplicação

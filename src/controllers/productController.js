@@ -18,7 +18,7 @@ export const ProductController = {
       res.json(products);
     } catch (error) {
       console.error("Erro ao listar produtos: ", error);
-      res.status(500).json({ Error: "Erro interno ao listar produtos." });
+      res.status(500).json({ Erro: "Erro interno ao listar produtos." });
     }
   },
 
@@ -32,12 +32,12 @@ export const ProductController = {
       const product = await ProductRepository.findById(id);
 
       if (!product) {
-        return res.status(404).json({ Error: "Produto não encontrado." });
+        return res.status(404).json({ Erro: "Produto não encontrado." });
       }
       res.json(product);
     } catch (error) {
       console.error("Erro ao tentar buscar produto: ", error);
-      res.status(500).json({ Error: "Erro interno ao buscar produto." });
+      res.status(500).json({ Erro: "Erro interno ao buscar produto." });
     }
   },
 
@@ -50,7 +50,7 @@ export const ProductController = {
       res.status(201).json(newProduct);
     } catch (error) {
       console.error("Erro ao tentar criar produto: ", error);
-      res.status(400).json({ Error: error.message });
+      res.status(400).json({ Erro: error.message });
     }
   },
 
@@ -65,7 +65,7 @@ export const ProductController = {
       res.json(updated);
     } catch (error) {
       console.error("Erro ao tentar atualizar produto: ", error);
-      res.status(400).json({ Error: "Erro ao tentar atualizar produto: " });
+      res.status(400).json({ Erro: "Erro ao tentar atualizar produto: " });
     }
   },
 
@@ -79,7 +79,7 @@ export const ProductController = {
     } catch (error) {
       console.error("Erro ao tentar deletar produto: ", error);
 
-      res.status(400).json({ Error: "Erro ao tentar deletar produto" });
+      res.status(404).json({ Erro: "Erro ao tentar deletar produto" });
     }
   },
 };
