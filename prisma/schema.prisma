@@ -15,32 +15,52 @@ datasource db {
 }
 
 model Product {
-  id          String @id @default(uuid())
-  title       String
-  description String
-  price       Float
-  ong  ONG @relation(fields: [ongId], references: [id_bd])
-  ongId Int
+  id            String       @id @default(uuid())
+  title         String
+  description   String
+  price         Float
+  ong           ONG          @relation(fields: [ongId], references: [id_bd])
+  ongId         Int
+  images        String[]
+  categories    Categories[]
+  specification String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ongId])
+}
+
+model Categories {
+  id       Int       @id @default(autoincrement())
+  value    String    @unique
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ONG {
-  id_bd                     Int      @id @default(autoincrement())
-  id                        Int?     @unique
-  name                      String?  @unique
-  description               String?
-  is_formalized             Boolean?
-  start_year                Int?
-  contact_phone             String?
-  instagram_link            String?
-  x_link                    String?
-  facebook_link             String?
-  pix_qr_code_link          String?
-  gallery_images_url        String?
-  skills                    String?
-  causes                    String?
+  id_bd                         Int       @id @default(autoincrement())
+  id                            Int?      @unique
+  name                          String?   @unique
+  description                   String?
+  is_formalized                 Boolean?
+  start_year                    Int?
+  contact_phone                 String?
+  instagram_link                String?
+  x_link                        String?
+  facebook_link                 String?
+  pix_qr_code_link              String?
+  gallery_images_url            String?
+  skills                        String?
+  causes                        String?
   sustainable_development_goals String?
-  products Product[]
+  products                      Product[]
+  banner                        String?
+  logo                          String?
+  whatsapp                      String?
 
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

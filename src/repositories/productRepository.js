@@ -6,15 +6,62 @@ import { prisma } from "../database/index.js";
 export const ProductRepository = {
   // Métodos para encontrar, criar, atualizar e deletar produtos
   // Cada método utiliza o PrismaClient para realizar operações no banco de dados
-  findAll: () => {
-    return prisma.product.findMany();
+  findMany: (params = {}) => {
+    return prisma.product.findMany(params);
+  },
+
+  findByCategory: (categoryId, skip, take) => {
+    return prisma.product.findMany({
+      where: {
+        categories: {
+          some: {
+            id: categoryId,
+          },
+        },
+      },
+      skip,
+      take,
+      orderBy: { createdAt: 'asc' },
+    });
+  },
+
+  findByOng: (ongId, skip, take) => {
+    return prisma.product.findMany({
+      where: {
+        ongId
+      },
+      skip,
+      take,
+      orderBy: { createdAt: 'asc' },
+    });
+  },
+
+  countByCategory: (categoryId) => {
+    return prisma.product.count({
+      where: {
+        categories: {
+          some: { id: categoryId },
+        },
+      },
+    })
+  },
+
+  countByOng: (ongId) => {
+    return prisma.product.count({
+      where: {
+        ongId
+      },
+    })
   },
 
   // Método para encontrar um produto por ID
   // Utiliza o método findUnique do PrismaClient para buscar um produto específico
-  findById: (id) => {
+  findUnique: (id) => {
     return prisma.product.findUnique({
       where: { id },
+      include: {
+        categories: true,
+      },
     });
   },
 
@@ -29,7 +76,15 @@ export const ProductRepository = {
   update: (id, data) => {
     return prisma.product.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        categories: {
+          set: data.categories.map(id => ({ id }))
+        },
+      },
+      include: {
+        categories: true,
+      },
     });
   },
 
