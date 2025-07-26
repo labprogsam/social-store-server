@@ -8,7 +8,7 @@ export const OngController = {
       res.status(200).json(ong);
     } catch (error) {
       console.error("Erro ao tentar salvar ONG: ", error);
-      res.status(400).json({ Mensagem: "Erro ao tentar salvar ONG: ", error });
+      res.status(400).json({ Error: "Erro ao tentar salvar ONG: ", error });
     }
   },
 
@@ -21,7 +21,7 @@ export const OngController = {
       if (name) {
         const ong = await OngRepository.findByName(name);
         if (!ong) {
-          return res.status(404).json({ Erro: "ONG não encontrada." });
+          return res.status(404).json({ Error: "ONG não encontrada." });
         }
         return res.status(200).json(ong);
       }
@@ -40,7 +40,7 @@ export const OngController = {
       res.status(200).json(ongs);
     } catch (error) {
       console.error("Erro ao processar requisição: ", error);
-      res.status(500).json({ Mensagem: "Erro interno: ", error });
+      res.status(500).json({ Error: "Erro interno: ", error });
     }
   },
 
@@ -55,7 +55,7 @@ export const OngController = {
       res.json(ong);
     } catch (error) {
       console.error("Erro ao buscar ONG: ", error);
-      res.status(500).json({ Erro: "Erro interno ao buscar ONG: ", error });
+      res.status(500).json({ Error: "Erro interno ao buscar ONG: ", error });
     }
   },
 
@@ -72,7 +72,7 @@ export const OngController = {
         .json({ "A seguinte ONG foi deletada com sucesso: ": ong });
     } catch (error) {
       console.error("Erro ao tentar deletar ONG: ", error);
-      res.status(404).json({ Erro: "Erro ao tentar deletar ONG." });
+      res.status(404).json({ Error: "Erro ao tentar deletar ONG." });
     }
   },
 };
