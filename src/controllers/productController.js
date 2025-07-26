@@ -79,7 +79,7 @@ export const ProductController = {
     } catch (error) {
       console.error("Erro ao tentar deletar produto: ", error);
 
-      res.status(404).json({ Error: "Erro ao tentar deletar produto" });
+      res.status(500).json({ Error: "Erro ao tentar deletar produto" });
     }
   },
 };
