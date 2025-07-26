@@ -28,11 +28,13 @@ async function authenticateExternalService(email, password) {
 async function saveOngData(ngoData) {
   if (!ngoData) return;
   const processedData = processData(ngoData);
-  await OngRepository.upsertOng(processedData);
+  const result = await OngRepository.upsertOng(processedData);
+  return result
 }
 
-function createSession(res, userData) {
+function createSession(res, userData, result) {
   const tokenPayload = {
+    id: result.id_bd,
     email: userData.user.email,
     ngoId: userData.ngo.id,
     name: userData.user.name,
@@ -43,7 +45,7 @@ function createSession(res, userData) {
   });
 
   res.cookie('token', token, {
-    httpOnly: true, // Protege contra ataques XSS
+    httpOnly: true,
     secure: process.env.NODE_ENV === 'prd',
     sameSite: 'lax',
     path: '/',
@@ -59,10 +61,10 @@ export const AuthController = {
       const externalData = await authenticateExternalService(email, password);
 
       // Salvar dados da ONG localmente (se houver)
-      await saveOngData(externalData.ngo);
+      const result = await saveOngData(externalData.ngo);
 
       // Criar a sessão (JWT + Cookie)
-      createSession(res, externalData);
+      createSession(res, externalData, result);
 
       const clientResponse = {
         user: {
@@ -77,7 +79,6 @@ export const AuthController = {
 
       return res.status(200).json(clientResponse);
     } catch (error) {
-      console.error('Falha no login:', error.message);
       return res.status(error.message.includes('Credenciais') ? 401 : 500).json({
         error: error.message || 'Erro interno no servidor.',
       });
