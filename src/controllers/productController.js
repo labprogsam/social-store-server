@@ -1,14 +1,6 @@
-// Antes de qualquer coisa: o que são controllers?
-// Controllers são responsáveis por lidar com as requisições HTTP, processar os dados recebidos e retornar as respostas adequadas.
-// Eles atuam como intermediários entre as rotas e os serviços ou repositórios que manipulam a lógica de negócios.
-// Neste caso, o ProductController lida com as operações relacionadas aos produtos, como listar, buscar por ID, criar, atualizar e deletar produtos.
-// Além disso, eles utilizam os DTOs (Data Transfer Objects) para validar e estruturar os dados recebidos nas requisições.
-// Ademais, o ProductController utiliza o ProductRepository para interagir com a base de dados, realizando as operações CRUD (Create, Read, Update, Delete) necessárias.
-// Importando o ProductRepository e o DTO necessário:
-
 import { ProductRepository } from "../repositories/productRepository.js";
 
-export const PrivProductController = {
+export const ProductController = {
   create: async (req, res) => {
     try {
       const {
@@ -54,8 +46,6 @@ export const PrivProductController = {
     }
   },
 
-  // O método update recebe o ID do produto a ser atualizado e os novos dados no corpo da requisição.
-  // Ele utiliza o ProductRepository para atualizar o produto e retorna o produto atualizado.
   update: async (req, res) => {
     try {
       const productId = req.params.produtoId;
@@ -81,8 +71,6 @@ export const PrivProductController = {
     }
   },
 
-  // O método delete recebe o ID do produto a ser deletado e utiliza o ProductRepository para realizar a exclusão.
-  // Ele retorna o produto deletado ou um erro caso não seja possível realizar a exclusão
   delete: async (req, res) => {
     try {
       const id = req.params.produtoId;
@@ -98,6 +86,76 @@ export const PrivProductController = {
     } catch (error) {
       console.error(error)
       res.status(400).json({ Error: "Erro ao tentar deletar produto" });
+    }
+  },
+
+  list: async (req, res) => {
+    try {
+      const products = await ProductRepository.findMany();
+      res.json(products);
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ Error: "Erro interno ao listar produtos." });
+    }
+  },
+
+  listByOng: async (req, res) => {
+    try {
+      const ongId = parseInt(req.params.ongId);
+      const skip = parseInt(req.query.skip) || 0;
+      const take = parseInt(req.query.take) || 4;
+
+      const ong = await OngRepository.findUnique(ongId);
+
+      if (!ong) {
+        return res.status(404).json({ Error: 'Ong não encontrada.' })
+      }
+
+      const products = await ProductRepository.findByOng(ongId, skip, take);
+
+      const total = await ProductRepository.countByOng(ongId);
+
+      return res.json({
+        data: products,
+        meta: {
+          total,
+          skip,
+          take,
+          hasNextPage: skip + take < total,
+        },
+      });
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ Error: "Erro interno ao listar produtos da ong." });
+    }
+  },
+
+  getById: async (req, res) => {
+    const id = req.params.produtoId;
+
+    try {
+      const product = await ProductRepository.findUnique(id);
+
+      if (!product) {
+        return res.status(400).json({ Error: "Produto não encontrado." });
+      }
+      res.json(product);
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ Error: "Erro interno ao buscar produto." });
+    }
+  },
+
+  highlights: async (req, res) => {
+    try {
+      const products = await ProductRepository.findMany({
+        take: 8,
+        orderBy: { createdAt: 'asc' },
+      });
+      res.json(products);
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ Error: "Erro interno ao listar produtos." });
     }
   },
 };
