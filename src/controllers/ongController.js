@@ -1,15 +1,123 @@
 import { OngRepository } from "../repositories/ongRepository.js";
+import { Uploader, DeleteImage } from "../utils/uploader.js";
 
 export const OngController = {
-  // Método que serve tanto para criar quanto para atualizar uma ONG
-  save: async (req, res) => {
+  update: async (req, res) => {
     try {
-      const ong = await OngRepository.upsertOng(req.body);
+      const {
+        name,
+        description
+      } = req.body;
+
+      const ongId = req.user?.id;
+      const ongInfos = await OngRepository.findUnique(ongId);
+
+      const updatedInfos = {
+        ...ongInfos,
+        name,
+        description
+      }
+
+      const ong = await OngRepository.upsertOng(updatedInfos);
       res.status(200).json(ong);
     } catch (error) {
       console.error("Erro ao tentar salvar ONG: ", error);
       res.status(400).json({ Error: "Erro ao tentar salvar ONG: ", error });
     }
+  },
+
+  updateWhatsapp: async (req, res) => {
+    try {
+      const {
+        whatsapp
+      } = req.body;
+
+      const ongId = req.user?.id;
+      const ongInfos = await OngRepository.findUnique(ongId);
+
+      const updatedInfos = {
+        ...ongInfos,
+        whatsapp
+      }
+
+      const ong = await OngRepository.upsertOng(updatedInfos);
+      res.status(200).json(ong);
+    } catch (error) {
+      console.error("Erro ao tentar salvar ONG: ", error);
+      res.status(400).json({ Error: "Erro ao tentar salvar ONG: ", error });
+    }
+  },
+
+  uploadLogo: async (req, res) => {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ Error: 'Arquivo não enviado.' });
+    }
+
+    try {
+      const uploadResult = await Uploader(file.buffer);
+
+      const ongId = req.user?.id;
+      const ongInfos = await OngRepository.findUnique(ongId);
+
+      if (ongInfos?.logo) {
+        await DeleteImage(ongInfos?.logo)
+      }
+
+      const updatedInfos = {
+        ...ongInfos,
+        logo: uploadResult.secure_url,
+      }
+
+      await OngRepository.upsertOng(updatedInfos);
+
+      res.status(200).json({
+          message: "Upload bem-sucedido!",
+          url: uploadResult.secure_url,
+          public_id: uploadResult.public_id,
+        });
+
+    } catch (error) {
+      console.error("Erro ao buscar ONG: ", error);
+      res.status(500).json({ Error: "Erro interno ao atualizar logo da ONG: ", error });
+    } 
+  },
+
+  uploadBanner: async (req, res) => {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ Error: 'Arquivo não enviado.' });
+    }
+
+    try {
+      const uploadResult = await Uploader(file.buffer, 1400);
+
+      const ongId = req.user?.id;
+      const ongInfos = await OngRepository.findUnique(ongId);
+
+      if (ongInfos?.banner) {
+        await DeleteImage(ongInfos?.banner)
+      }
+
+      const updatedInfos = {
+        ...ongInfos,
+        banner: uploadResult.secure_url,
+      }
+
+      await OngRepository.upsertOng(updatedInfos);
+
+      res.status(200).json({
+          message: "Upload bem-sucedido!",
+          url: uploadResult.secure_url,
+          public_id: uploadResult.public_id,
+        });
+
+    } catch (error) {
+      console.error("Erro ao buscar ONG: ", error);
+      res.status(500).json({ Error: "Erro interno ao atualizar banner da ONG: ", error });
+    } 
   },
 
   // Método que serve para listar ONGs ou buscar por query parameters

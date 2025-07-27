@@ -1,6 +1,6 @@
 export const processData = (data) => {
   return {
-    id: data.id,
+    external_id: data.id,
     name: data.name,
     description: data.description,
     is_formalized: data.is_formalized,

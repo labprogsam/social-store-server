@@ -4,7 +4,7 @@ export const OngRepository = {
   // Método que serve tanto para criar quanto para atualizar uma ONG
   upsertOng: (processedData) => {
     return prisma.ONG.upsert({
-      where: { id: processedData.id },
+      where: { external_id: processedData.external_id },
       update: processedData,
       create: processedData,
     });
@@ -21,7 +21,12 @@ export const OngRepository = {
     });
   },
 
-  // Método para buscar uma ONG pelo nome
+  findUnique: (id) => {
+    return prisma.ONG.findUnique({
+      where: { id },
+    });
+  },
+
   findByName: (name) => {
     return prisma.ONG.findUnique({
       where: { name },

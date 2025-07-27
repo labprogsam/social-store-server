@@ -15,8 +15,8 @@ router.use("/api/categories", categoriesRoutes);
 // TODO: criar listagem de produtos por ong (existe no controller de produto)
 
 // Rotas mistas (algumas públicas, outras privadas)
-router.use("/api/ong", ongRoutes);
-router.use("/api/produtos", productRoutes);
+router.use("/api/ongs", ongRoutes);
+router.use("/api/products", productRoutes);
 
 router.get("/", (req, res) => {
   res.json("Bem-vindo à Lojinha Social!");

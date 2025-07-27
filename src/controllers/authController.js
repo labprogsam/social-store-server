@@ -32,12 +32,12 @@ async function saveOngData(ngoData) {
   return result
 }
 
-function createSession(res, userData, result) {
+function createSession(res, externalData, result) {
   const tokenPayload = {
-    id: result.id_bd,
-    email: userData.user.email,
-    ngoId: userData.ngo.id,
-    name: userData.user.name,
+    id: result.id,
+    email: externalData.user.email,
+    ngoId: externalData.ngo.id,
+    name: externalData.user.name,
   };
 
   const token = jwt.sign(tokenPayload, process.env.SECRET_KEY, {
@@ -79,6 +79,7 @@ export const AuthController = {
 
       return res.status(200).json(clientResponse);
     } catch (error) {
+      console.error(error)
       return res.status(error.message.includes('Credenciais') ? 401 : 500).json({
         error: error.message || 'Erro interno no servidor.',
       });

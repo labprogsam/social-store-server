@@ -42,6 +42,10 @@ export const ProductRepository = {
     })
   },
 
+  count: () => {
+    return prisma.product.count()
+  },
+
   countByOng: (ongId) => {
     return prisma.product.count({
       where: {

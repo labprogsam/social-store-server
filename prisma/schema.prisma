@@ -19,7 +19,7 @@ model Product {
   title         String
   description   String
   price         Float
-  ong           ONG          @relation(fields: [ongId], references: [id_bd])
+  ong           ONG          @relation(fields: [ongId], references: [id])
   ongId         Int
   images        String[]
   categories    Categories[]
@@ -41,8 +41,8 @@ model Categories {
 }
 
 model ONG {
-  id_bd                         Int       @id @default(autoincrement())
-  id                            Int?      @unique
+  id                            Int       @id @default(autoincrement())
+  external_id                   Int?      @unique
   name                          String?   @unique
   description                   String?
   is_formalized                 Boolean?

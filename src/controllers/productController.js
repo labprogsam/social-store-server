@@ -1,4 +1,5 @@
 import { ProductRepository } from "../repositories/productRepository.js";
+import { OngRepository } from "../repositories/ongRepository.js";
 
 export const ProductController = {
   create: async (req, res) => {
@@ -40,7 +41,7 @@ export const ProductController = {
       const product = await ProductRepository.create(productData);
       return res.status(201).json(product);
 
-    } catch (err) {
+    } catch (error) {
       console.error(error)
       return res.status(500).json({ error: 'Internal server error' });
     }
@@ -80,7 +81,7 @@ export const ProductController = {
       if (!product || product.ongId !== req.user.id) {
         return res.status(403).json({ error: 'Acesso negado.' });
       }
-      
+
       const deleted = await ProductRepository.delete(id);
       res.json(deleted);
     } catch (error) {
@@ -91,8 +92,25 @@ export const ProductController = {
 
   list: async (req, res) => {
     try {
-      const products = await ProductRepository.findMany();
-      res.json(products);
+      const skip = parseInt(req.query.skip) || 0;
+      const take = parseInt(req.query.take) || 4;
+      const products = await ProductRepository.findMany({
+        skip,
+        take,
+        orderBy: { createdAt: 'asc' },
+      });
+
+      const total = await ProductRepository.count();
+
+      return res.json({
+        data: products,
+        meta: {
+          total,
+          skip,
+          take,
+          hasNextPage: skip + take < total,
+        },
+      });
     } catch (error) {
       console.error(error)
       res.status(500).json({ Error: "Erro interno ao listar produtos." });
@@ -103,7 +121,7 @@ export const ProductController = {
     try {
       const ongId = parseInt(req.params.ongId);
       const skip = parseInt(req.query.skip) || 0;
-      const take = parseInt(req.query.take) || 4;
+      const take = parseInt(req.query.take) || 8;
 
       const ong = await OngRepository.findUnique(ongId);
 
