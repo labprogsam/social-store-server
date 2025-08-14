@@ -18,6 +18,11 @@ export const ProductRepository = {
       skip,
       take,
       orderBy: { createdAt: 'asc' },
+      include: {
+        ong: {
+          select: { name: true, id: true }
+        }
+      },
     });
   },
 
@@ -58,6 +63,9 @@ export const ProductRepository = {
     return prisma.product.findUnique({
       where: { id },
       include: {
+        ong: {
+          select: { name: true, id: true }
+        },
         categories: true,
       },
     });

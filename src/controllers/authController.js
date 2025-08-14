@@ -86,6 +86,22 @@ export const AuthController = {
     }
   },
 
+  verifyCredentials: async (req, res) => {
+    const token = req.cookies.token;
+    
+    if (!token) {
+      return res.status(401).json({ error: "Token não fornecido" });
+    }
+
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ error: "Token inválido" });
+      }
+  
+      res.json({user: decoded });
+    });
+  },
+
   logout: async (req, res) => {
     try {
       res.clearCookie('token', {

@@ -11,7 +11,7 @@ export const OngRepository = {
   },
 
   findAll: () => {
-    return prisma.ONG.findMany({ include: { products: true } });
+    return prisma.ONG.findMany();
   },
 
   findById: (id) => {
