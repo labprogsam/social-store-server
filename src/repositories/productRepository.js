@@ -20,7 +20,7 @@ export const ProductRepository = {
       orderBy: { createdAt: 'asc' },
       include: {
         ong: {
-          select: { name: true, id: true }
+          select: { name: true, id: true, whatsapp: true }
         }
       },
     });
@@ -64,7 +64,7 @@ export const ProductRepository = {
       where: { id },
       include: {
         ong: {
-          select: { name: true, id: true }
+          select: { name: true, id: true, whatsapp: true }
         },
         categories: true,
       },
