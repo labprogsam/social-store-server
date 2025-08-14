@@ -14,5 +14,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  backend:
+    build: .
+    container_name: backend-local
+    environment:
+      - SERVER_PORT=8000
+      - DATABASE_URL=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:${DATABASE_PORT}/${DATABASE_NAME}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    command: sh -c "npx prisma migrate deploy && node prisma/seed.js && node src/server.js"
+
 volumes:
   postgres_data:
