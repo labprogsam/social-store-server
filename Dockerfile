@@ -14,4 +14,4 @@ ENV NODE_ENV=production
 
 EXPOSE 8008
 
-CMD sh -c "npx prisma migrate deploy && node src/index.js"
+CMD sh -c "npx prisma migrate deploy && node src/server.js"
