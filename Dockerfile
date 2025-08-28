@@ -1,4 +1,4 @@
-FROM node:20-alpine AS build
+FROM node:20-alpine
 
 WORKDIR /src
 
@@ -9,10 +9,9 @@ RUN npm install
 COPY . .
 
 RUN npx prisma generate
-RUN npm run seed
 
-ENV NODE_ENV=prd
+ENV NODE_ENV=production
 
-EXPOSE 8000
+EXPOSE 8008
 
-CMD ["node", "src/server.js"]
+CMD sh -c "npx prisma migrate deploy && node src/index.js"
