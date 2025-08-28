@@ -11,8 +11,9 @@ const app = express();
 app.use(express.json());
 
 const allowedOrigins = [
-  "http://localhost",
-  "http://localhost:5173"
+  "http://social-store-frontend:3008",
+  "http://vm-cinboraimpactar2.cin.ufpe.br/lojasocial",
+  "http://vm-cinboraimpactar2.cin.ufpe.br" 
 ];
 
 app.use(
