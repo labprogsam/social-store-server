@@ -8,7 +8,9 @@ import routes from "./routes/index.js";
 
 const app = express();
 
-app.use(express.json());
+// Aumentar limite de payload para permitir uploads de imagens
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const allowedOrigins = [
   "http://social-store-frontend:3008",
