@@ -148,6 +148,34 @@ export const ProductController = {
     }
   },
 
+  listByCategory: async (req, res) => {
+    try {
+      const categoryId = parseInt(req.query.categoryId);
+      const skip = parseInt(req.query.skip) || 0;
+      const take = parseInt(req.query.take) || 8;
+  
+      if (isNaN(categoryId)) {
+        return res.status(400).json({ error: 'ID de categoria inválido.' });
+      }
+  
+      const products = await ProductRepository.findByCategory(categoryId, skip, take);
+      const total = await ProductRepository.countByCategory(categoryId);
+  
+      return res.json({
+        data: products,
+        meta: {
+          total,
+          skip,
+          take,
+          hasNextPage: skip + take < total,
+        },
+      });
+    } catch (error) {
+      console.error('Erro ao buscar produtos por categoria:', error);
+      res.status(500).json({ error: 'Erro interno ao listar produtos por categoria.' });
+    }
+  },
+
   getById: async (req, res) => {
     const id = req.params.produtoId;
 

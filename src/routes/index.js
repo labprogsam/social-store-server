@@ -6,6 +6,7 @@ import ongRoutes from "./ongRoutes.js";
 import productRoutes from "./productRoutes.js";
 import categoriesRoutes from "../routes/categoriesRoutes.js";
 import authRoutes from "./authRoutes.js"
+import { ProductController } from "../controllers/productController.js";
 
 const router = express.Router();
 

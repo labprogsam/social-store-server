@@ -7,6 +7,7 @@ const router = express.Router();
 
 // Private Routes
 router.post("/", verifyToken, ProductController.create);
+router.get("/by-category", ProductController.listByCategory);
 router.put("/:produtoId", verifyToken, ProductController.update);
 router.delete("/:produtoId", verifyToken, ProductController.delete);
 
